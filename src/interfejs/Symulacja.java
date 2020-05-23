@@ -23,7 +23,7 @@ public class Symulacja extends JPanel implements MouseListener, MouseMotionListe
 {
 int lambda, obiekt, sobiekt, zalamany;
 double myszxy;
-boolean mode, obrotzrodla, dark, kolor, aktywny, wielekolorow;
+boolean mode, obrotzrodla, dark, kolor, aktywny, wielekolorow, fincal;
 Point2D punktroz;
 float n;
 Zrodlo zr;
@@ -32,9 +32,11 @@ ArrayList<ZwierciadlaPryzmaty> zwierciadla = new ArrayList<ZwierciadlaPryzmaty>(
 ArrayList<ArrayList<Point2D>> kolorowepromienie;
 ArrayList<Promien> colorray;
 ArrayList<Point2D> promien;
+ArrayList<Thread> obliczenia;
 int spowolnienie=0;
 Przeciecia inter;
 int odstep=0;
+int currlambda;
 
 	public Symulacja()
 	{
@@ -54,6 +56,8 @@ int odstep=0;
 		inter = new Przeciecia();
 		colorray = new ArrayList<Promien>();
 		kolorowepromienie = new ArrayList<ArrayList<Point2D>>();
+		obliczenia = new ArrayList<Thread>();
+		fincal=true;
 		for(int i=380; i<781; i++)
 		{
 			colorray.add(new Promien());
@@ -107,17 +111,48 @@ int odstep=0;
 			if(wielekolorow)
 			{
 				odstep=0;
+				if(fincal)
 				for(int i=380; i<781; i++)
 				{
-					if(odstep==0)
-					{
-						obliczpromien(colorray.get(i-380), true);
-						colorray.get(i-380).paint(g2d);
-					}
-					odstep++;
+					fincal=false;
+				/*	if(odstep==0) 
+					{*/
+						currlambda=i;
+						obliczenia.add(new Thread(new Runnable() 
+						{
+							@Override
+							public void run()
+							{
+								obliczpromien(colorray.get(currlambda-380), true);
+								colorray.get(currlambda-380).paint(g2d);
+								if(currlambda!=380) {
+									obliczenia.get(currlambda-381).stop();
+								}
+							}
+						}));
+						if(!obliczenia.get(i-380).isAlive())
+							obliczenia.get(i-380).run();
+					//}	
+				}
+				int chk=1;
+				for(int i=380; i<781; i++)
+				{
+					if(obliczenia.get(i-380).isAlive())
+						chk--;
+				}
+				if(chk==1)
+				{
+					fincal=true;
+					obliczenia.clear();
+				}
+				int comp=0;
+			/*	for(int i=380; i<781; i++) {
+					obliczenia.get(i-380).stop();
+				}*/
+				/*	odstep++;
 					if(odstep==4)
 						odstep=0;
-				}
+				}*/
 			}
 		}
 		zr.paint(g2d);
@@ -411,7 +446,7 @@ int odstep=0;
 														nowykat = (prostopadla-180-Math.toDegrees(Math.asin(asinw)));
 													}
 												}
-												System.out.println(asinw);
+												//System.out.println(asinw);
 												
 											}
 											if(colorray.get(k-380).getkaty().size()==0)
