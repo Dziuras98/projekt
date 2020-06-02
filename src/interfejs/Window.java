@@ -36,8 +36,8 @@ public class Window extends JFrame
 	GradientToggleButton start, ciemny;
 	GradientButton fala, pryzmat, zwierciadlo;
 	JMenuBar menuBar;
-	JMenu menubutton;
-	JMenuItem nowa, otworz, zapisz;
+	JMenu menubutton, submenu;
+	JMenuItem nowa, otworz, zapis1, zapis2;
 	JRadioButtonMenuItem jezyk;
 
 	public Window() throws HeadlessException 
@@ -67,7 +67,9 @@ public class Window extends JFrame
 					{
 						nowa.setText("New simulation");
 						otworz.setText("Open");
-						zapisz.setText("Save");
+						zapis1.setText("Save data");
+						zapis2.setText("Save image");
+						submenu.setText("Save options");
 						fala.setText("choose wavelength");
 						pryzmat.setText("add prism");
 						zwierciadlo.setText("add mirror");
@@ -78,7 +80,9 @@ public class Window extends JFrame
 					{
 						nowa.setText("Nowa symulacja");
 						otworz.setText("Otwórz");
-						zapisz.setText("Zapisz");
+						zapis1.setText("Zapisz dane do odtworzenia");
+						zapis2.setText("Zapisz obraz symulacji");
+						submenu.setText("Opcje zapisu");
 						fala.setText("wybór fali");
 						pryzmat.setText("dodaj pryzmat");
 						zwierciadlo.setText("dodaj zwierciad³o");
@@ -121,10 +125,11 @@ public class Window extends JFrame
 				}
 			};
 			otworz.addActionListener(otwieranie);
-			
-			zapisz = new JMenuItem("Zapisz");
-			menubutton.add(zapisz);
-			ActionListener zapis = new ActionListener()
+			submenu = new JMenu("Opcje zapisu");
+			menubutton.add(submenu);
+			zapis1 = new JMenuItem("Zapisz dane do odtworzenia");
+			submenu.add(zapis1);
+			ActionListener zapisz1 = new ActionListener()
 			{
 				@Override
 				public void actionPerformed(ActionEvent arg0)
@@ -140,7 +145,26 @@ public class Window extends JFrame
 					}
 				}
 			};
-			zapisz.addActionListener(zapis);
+			zapis1.addActionListener(zapisz1);
+			zapis2 = new JMenuItem("Zapisz obraz symulacji");
+			submenu.add(zapis2);
+			ActionListener zapisz2 = new ActionListener()
+			{
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+
+					int returnValue = jfc.showSaveDialog(null);
+
+					if (returnValue == JFileChooser.APPROVE_OPTION) 
+					{
+						File out = jfc.getSelectedFile();
+						symulacja.zapisz2(out);
+					}
+				}
+			};
+			zapis2.addActionListener(zapisz2);
 			menuBar.add(menubutton);
 			this.setJMenuBar(menuBar);
 	

@@ -9,12 +9,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 
@@ -77,12 +79,22 @@ int currlambda;
 	public void dodajZwierciadlo(int typ)
 	{
 		zwierciadla.add(new ZwierciadlaPryzmaty(typ));
-		repaint();
+		if(!aktywny)
+		{
+			ray.getpunkty().clear();
+			ray.getpunkty().add(new Point2D.Double(0,310));
+		}
+		super.repaint();
 	}
 	public void dodajZwierciadlo(float n)
 	{
 		zwierciadla.add(new ZwierciadlaPryzmaty(n));
-		repaint();
+		if(!aktywny)
+		{
+			ray.getpunkty().clear();
+			ray.getpunkty().add(new Point2D.Double(0,310));
+		}
+		super.repaint();
 	}
 	
 	@Override
@@ -154,6 +166,11 @@ int currlambda;
 						odstep=0;
 				}*/
 			}
+		} 
+		else
+		{
+			podglad(ray);
+			ray.podglad(g2d);
 		}
 		zr.paint(g2d);
 	}
@@ -181,6 +198,13 @@ int currlambda;
 	{
 		aktywny = a;
 		repaint();
+		if(!a)
+		{
+			ray.getkaty().set(0, (double)zr.getkat());
+			ray.getpunkty().clear();
+			ray.getpunkty().add(new Point2D.Double(0,310));
+			super.repaint();
+		}
 	}
 	
 	public void wczytaj (File inputfile)
@@ -241,6 +265,19 @@ int currlambda;
 			System.out.println(e.getMessage());
 		}
 	}
+	public void zapisz2(File f)
+	{
+		BufferedImage image = new BufferedImage(this.getWidth(), this.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = image.createGraphics();
+		this.paintAll(g2d);
+		try 
+		{
+			ImageIO.write(image, "png", f);
+		} catch (IOException e) 
+		{
+			System.out.println(e.getMessage());
+		}
+	}
 	
 	public void wyczysc()
 	{
@@ -256,6 +293,24 @@ int currlambda;
 		zwierciadla = null;
 		zwierciadla = new ArrayList<ZwierciadlaPryzmaty>();
 		repaint();
+	}
+	public void podglad(Promien rx)
+	{
+		boolean naekranie=true;
+		int i=0;
+		while(naekranie) 
+		{
+			double xc=rx.getpunkty().get(i).getX(), yc=rx.getpunkty().get(i).getY();
+			xc+=20*Math.cos(Math.toRadians(Double.valueOf(zr.getkat())));
+			yc+=20*Math.sin(Math.toRadians(Double.valueOf(zr.getkat())));
+			System.out.println(xc + " " + yc + " " + zr.getkat());
+			if(xc>this.getWidth() || xc<0 || yc>this.getHeight() || yc<0)
+			{
+				naekranie=false;
+			} 
+			rx.getpunkty().add(new Point2D.Double(xc, yc));
+			i++;
+		}
 	}
 	
 	public void obliczpromien(Promien rx, boolean zalamanie)
@@ -575,6 +630,11 @@ int currlambda;
 			{
 				zwierciadla.get(obiekt-1).setxy(e.getX(), e.getY());
 				zwierciadla.get(obiekt-1).odswiezramke();
+				if(!aktywny)
+				{
+					ray.getpunkty().clear();
+					ray.getpunkty().add(new Point2D.Double(0,310));
+				}
 				super.repaint();
 			}
 			else
@@ -585,6 +645,11 @@ int currlambda;
 					zwierciadla.get(obiekt-1).setkat(zwierciadla.get(obiekt-1).getkat()-(int)(myszxy-(Math.sqrt((double)((double)e.getX()*(double)e.getX()+(double)e.getY()*(double)e.getY()))))/2);	
 				myszxy=Math.sqrt((double)(e.getX()*e.getX()+e.getY()*e.getY()));
 				zwierciadla.get(obiekt-1).odswiezramke();
+				if(!aktywny)
+				{
+					ray.getpunkty().clear();
+					ray.getpunkty().add(new Point2D.Double(0,310));
+				}
 				super.repaint();
 			}
 		}
@@ -616,6 +681,8 @@ int currlambda;
 				}
 				myszxy=Math.sqrt((double)((double)e.getX()*(double)e.getX()+(double)e.getY()*(double)e.getY()));
 				ray.getkaty().set(0, (double)zr.getkat());
+				ray.getpunkty().clear();
+				ray.getpunkty().add(new Point2D.Double(0,310));
 				super.repaint();
 			}
 		}
@@ -734,6 +801,11 @@ int currlambda;
 		{
 			obrotzrodla=true;
 		}
+		if(!aktywny)
+		{
+			ray.getpunkty().clear();
+			ray.getpunkty().add(new Point2D.Double(0,310));
+		}
 		super.repaint();
 	}
 
@@ -743,6 +815,11 @@ int currlambda;
 		sobiekt=obiekt;
 		obiekt=0;
 		mode=false;
+		if(!aktywny)
+		{
+			ray.getpunkty().clear();
+			ray.getpunkty().add(new Point2D.Double(0,310));
+		}
 		super.repaint();
 		obrotzrodla=false;
 	}
