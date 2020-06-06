@@ -106,7 +106,6 @@ public class Promien
 		g2d.setStroke(bs);
 		for(int i=1; i<punkty.size(); i=i+2)
 		{
-		//	System.out.println(i);
 			g2d.drawLine((int)punkty.get(i-1).getX(), (int)punkty.get(i-1).getY(), (int)punkty.get(i).getX(), (int)punkty.get(i).getY());
 		}
 	}

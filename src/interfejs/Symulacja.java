@@ -34,7 +34,6 @@ ArrayList<ZwierciadlaPryzmaty> zwierciadla = new ArrayList<ZwierciadlaPryzmaty>(
 ArrayList<ArrayList<Point2D>> kolorowepromienie;
 ArrayList<Promien> colorray;
 ArrayList<Point2D> promien;
-ArrayList<Thread> obliczenia;
 int spowolnienie=0;
 Przeciecia inter;
 int odstep=0;
@@ -58,7 +57,6 @@ int currlambda;
 		inter = new Przeciecia();
 		colorray = new ArrayList<Promien>();
 		kolorowepromienie = new ArrayList<ArrayList<Point2D>>();
-		obliczenia = new ArrayList<Thread>();
 		fincal=true;
 		for(int i=380; i<781; i++)
 		{
@@ -127,44 +125,10 @@ int currlambda;
 				for(int i=380; i<781; i++)
 				{
 					fincal=false;
-				/*	if(odstep==0) 
-					{*/
-						currlambda=i;
-						obliczenia.add(new Thread(new Runnable() 
-						{
-							@Override
-							public void run()
-							{
-								obliczpromien(colorray.get(currlambda-380), true);
-								colorray.get(currlambda-380).paint(g2d);
-								if(currlambda!=380) {
-									obliczenia.get(currlambda-381).stop();
-								}
-							}
-						}));
-						if(!obliczenia.get(i-380).isAlive())
-							obliczenia.get(i-380).run();
-					//}	
+					obliczpromien(colorray.get(i-380), true);
+					colorray.get(i-380).paint(g2d);
 				}
-				int chk=1;
-				for(int i=380; i<781; i++)
-				{
-					if(obliczenia.get(i-380).isAlive())
-						chk--;
-				}
-				if(chk==1)
-				{
 					fincal=true;
-					obliczenia.clear();
-				}
-				int comp=0;
-			/*	for(int i=380; i<781; i++) {
-					obliczenia.get(i-380).stop();
-				}*/
-				/*	odstep++;
-					if(odstep==4)
-						odstep=0;
-				}*/
 			}
 		} 
 		else
@@ -303,7 +267,6 @@ int currlambda;
 			double xc=rx.getpunkty().get(i).getX(), yc=rx.getpunkty().get(i).getY();
 			xc+=20*Math.cos(Math.toRadians(Double.valueOf(zr.getkat())));
 			yc+=20*Math.sin(Math.toRadians(Double.valueOf(zr.getkat())));
-			System.out.println(xc + " " + yc + " " + zr.getkat());
 			if(xc>this.getWidth() || xc<0 || yc>this.getHeight() || yc<0)
 			{
 				naekranie=false;
@@ -449,7 +412,7 @@ int currlambda;
 									odstep=0;
 									for(int k=380; k<781; k++)
 									{
-										if(odstep==0)
+										if(true)
 										{
 											if(colorray.get(k-380).getkaty().size()>1)
 												nowykat=colorray.get(k-380).getkaty().get(i);
@@ -520,6 +483,7 @@ int currlambda;
 										wielekolorow=true;
 										zalamany=j;
 									}
+									break;
 								}
 								odstep++;
 								if(odstep==4)
