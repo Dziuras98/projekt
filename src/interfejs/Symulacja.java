@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 
 public class Symulacja extends JPanel implements MouseListener, MouseMotionListener
 {
-int lambda, obiekt, sobiekt, zalamany;
+int lambda, obiekt, sobiekt, zalamany, szalamania;
 double myszxy;
 boolean mode, obrotzrodla, dark, kolor, aktywny, wielekolorow, fincal;
 Point2D punktroz;
@@ -485,11 +485,12 @@ int currlambda;
 										coll=true;
 										wielekolorow=true;
 										zalamany=j;
+										szalamania=scianapryzmatu;
 									}
 								}
 								else if(!wielekolorow)
 									nowykat=(180+prostopadla-Math.toDegrees(Math.asin((double)zwierciadla.get(j).getn()*Math.sin(Math.toRadians(180.0+prostopadla-(double)rx.getkaty().get(i))))));
-								else
+								else if (szalamania!=scianapryzmatu)
 									nowykat=(180+prostopadla-Math.toDegrees(Math.asin((double)zwierciadla.get(j).getn()*rx.getm()*Math.sin(Math.toRadians(180.0+prostopadla-(double)rx.getkaty().get(i))))));
 								if(Math.abs(nowykat-(prostopadla+180))<90)
 								{
@@ -498,6 +499,7 @@ int currlambda;
 								}
 								else
 								{
+									zalamanie=true;
 									double asinw = (double)zwierciadla.get(j).getn()*Math.sin(Math.toRadians(180+prostopadla-(double)rx.getkaty().get(i)));
 									if(asinw>1)
 										asinw--;
@@ -514,13 +516,14 @@ int currlambda;
 									if(prostopadla>0)
 									{
 										nowykat = (prostopadla-90-Math.toDegrees(Math.asin(asinw)));
+										zalamanie=false;
 									}
 									else
 									{
 										nowykat = (prostopadla+90-Math.toDegrees(Math.asin(asinw)));
+										zalamanie=false;
 									}
 									rx.getkaty().add((nowykat));
-									zalamanie=true;
 								}
 							}
 						}
@@ -541,21 +544,21 @@ int currlambda;
 								{
 									nscianapryzmatu=3;
 								}
-								if(Przeciecia.doIntersect(q1, p1, j1, j2) && scianapryzmatu!=nscianapryzmatu)
+								if(Przeciecia.doIntersect(q1, p1, j1, j2) && szalamania!=nscianapryzmatu)
 								{
 									prostopadla = zwierciadla.get(j).getkat()+60;
 									coll=true;
 									zalamanie=false;
 									rx.getkaty().add((rx.getkaty().get(i)-Math.toDegrees(Math.asin((double)((zwierciadla.get(j).getn()-1)*Math.sin(Math.toRadians(rx.getkaty().get(i)-prostopadla)))))));
 								}
-								else if(Przeciecia.doIntersect(q1, p1, j2, j3) && scianapryzmatu!=nscianapryzmatu)
+								else if(Przeciecia.doIntersect(q1, p1, j2, j3) && szalamania!=nscianapryzmatu)
 								{
 									prostopadla = zwierciadla.get(j).getkat()+180;
 									coll=true;
 									zalamanie=false;
 									rx.getkaty().add((rx.getkaty().get(i)-Math.toDegrees(Math.asin((double)((zwierciadla.get(j).getn()-1)*Math.sin(Math.toRadians(rx.getkaty().get(i)-prostopadla)))))));
 								}
-								else if(Przeciecia.doIntersect(q1, p1, j3, j1) && scianapryzmatu!=nscianapryzmatu)
+								else if(Przeciecia.doIntersect(q1, p1, j3, j1) && szalamania!=nscianapryzmatu)
 								{
 									prostopadla = zwierciadla.get(j).getkat()-60;
 									coll=true;

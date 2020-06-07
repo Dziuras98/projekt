@@ -6,7 +6,12 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 public class ZwierciadlaPryzmaty 
 {
@@ -16,6 +21,7 @@ public class ZwierciadlaPryzmaty
 	boolean wybor, dark;
 	Polygon ramka;
 	Point2D srodekkola;
+	BufferedImage ob;
 	public ZwierciadlaPryzmaty(int a)
 	{
 		n=1;
@@ -56,6 +62,7 @@ public class ZwierciadlaPryzmaty
 			ramka.addPoint(x+15, y-5);
 			ramka.addPoint(x+15, y+115);
 			ramka.addPoint(x-20, y+115);
+			ladujobraz(typ);
 		}
 		if(typ==3)
 		{
@@ -71,6 +78,7 @@ public class ZwierciadlaPryzmaty
 			ramka.addPoint(x+30, y-5);
 			ramka.addPoint(x+30, y+120);
 			ramka.addPoint(x+5, y+120);
+			ladujobraz(typ);
 		}
 		for(int i=0; i<4; i++) 
 		{
@@ -113,12 +121,7 @@ public class ZwierciadlaPryzmaty
 			g2d.transform(at);
 			at.setToRotation(Math.toRadians(kat));
 			g2d.transform(at);
-			g2d.fillRect(-16, -60, 34, 120);
-			if(dark)
-				g2d.setColor(Color.black);
-			else
-				g2d.setColor(Color.LIGHT_GRAY);
-			g2d.fillArc(-170, -90, 180, 180, -45, 90);
+			g2d.drawImage(ob, -13, -60, null);
 			g2d.setColor(Color.GRAY);
 		}
 		if(typ==3)
@@ -129,12 +132,7 @@ public class ZwierciadlaPryzmaty
 			g2d.transform(at);
 			at.setToRotation(Math.toRadians(kat));
 			g2d.transform(at);
-			g2d.fillArc(-12, -90, 180, 180, -135, -90);
-			if(dark)
-				g2d.setColor(Color.black);
-			else
-				g2d.setColor(Color.LIGHT_GRAY);
-			g2d.fillRect(14, -63, 65, 126);
+			g2d.drawImage(ob, -12, -63, null);
 			g2d.setColor(Color.GRAY);
 			
 		}
@@ -276,5 +274,32 @@ public class ZwierciadlaPryzmaty
 	public Point2D getsrodek()
 	{
 		return srodekkola;
+	}
+	public void ladujobraz(int t)
+	{
+		if(t==2)
+		{
+			try
+			{
+				File inputFile = new File("2.png");
+				ob = ImageIO.read(inputFile);
+			}
+			catch(IOException e)
+			{
+				System.err.println("B³¹d pliku 2.png");
+			}
+		}
+		if(t==3)
+		{
+			try
+			{
+				File inputFile = new File("3.png");
+				ob = ImageIO.read(inputFile);
+			}
+			catch(IOException e)
+			{
+				System.err.println("B³¹d pliku 3.png");
+			}
+		}	
 	}
 }
