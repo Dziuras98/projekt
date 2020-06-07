@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -61,16 +60,10 @@ int currlambda;
 		for(int i=380; i<781; i++)
 		{
 			colorray.add(new Promien());
-			if(odstep==0)
-			{
-				kolorowepromienie.add(new ArrayList<Point2D>());
-				colorray.get(i-380).setm(Math.pow(2.71828182846,(500-i)*0.0001));
-				colorray.get(i-380).setlambda(i);
-				colorray.get(i-380).setkolor(true);
-			}
-			odstep++;
-			if(odstep==4)
-				odstep=0;
+			kolorowepromienie.add(new ArrayList<Point2D>());
+			colorray.get(i-380).setm(Math.pow(2.71828182846,(500-i)*0.0001));
+			colorray.get(i-380).setlambda(i);
+			colorray.get(i-380).setkolor(true);
 		}
 	}
 
@@ -121,14 +114,12 @@ int currlambda;
 			if(wielekolorow)
 			{
 				odstep=0;
-				if(fincal)
 				for(int i=380; i<781; i++)
 				{
-					fincal=false;
+					colorray.get(i-380).setkolor(true);
 					obliczpromien(colorray.get(i-380), true);
 					colorray.get(i-380).paint(g2d);
 				}
-					fincal=true;
 			}
 		} 
 		else
@@ -177,8 +168,12 @@ int currlambda;
 		{
 			int rozmiar=0, nexttyp=0, nx=0, ny=0, nkat=0, nn=0;
 			Scanner skaner = new Scanner(inputfile);
-			kolor=skaner.nextBoolean();
-			ray.setkolor(kolor);
+			int kolort = skaner.nextInt();
+			if(kolort==1)
+				kolor=true;
+			else
+				kolor=false;
+			ray.setkolor(!kolor);
 			lambda=skaner.nextInt();
 			ray.setlambda(lambda);
 			zr.setkat(skaner.nextInt());
@@ -213,7 +208,14 @@ int currlambda;
 		try
 		{
 			FileWriter writer = new FileWriter(outputfile);
-			writer.write(String.valueOf(kolor) + " ");
+			if(kolor) 
+			{
+				writer.write(1 + " ");
+			}
+			else 
+			{
+				writer.write(0 + " ");
+			}
 			writer.write(lambda + " ");
 			writer.write(zr.getkat() + " ");
 			writer.write(zwierciadla.size() + " " + "\n");
@@ -409,11 +411,11 @@ int currlambda;
 								double nowykat=0;
 								if(!rx.getkolor())
 								{
-									odstep=0;
 									for(int k=380; k<781; k++)
 									{
 										if(true)
 										{
+											zalamanie=true;
 											if(colorray.get(k-380).getkaty().size()>1)
 												nowykat=colorray.get(k-380).getkaty().get(i);
 											else
@@ -440,6 +442,7 @@ int currlambda;
 													{
 														nowykat = (prostopadla+90-Math.toDegrees(Math.asin(asinw)));
 													}
+													zalamanie=false;
 												}
 												else if(asinw<-1)
 												{
@@ -452,6 +455,7 @@ int currlambda;
 													{
 														nowykat = (prostopadla-90-Math.toDegrees(Math.asin(asinw)));
 													}
+													zalamanie=false;
 												}
 												else
 												{
@@ -479,15 +483,10 @@ int currlambda;
 										}
 										naekranie=false;
 										coll=true;
-										zalamanie=true;
 										wielekolorow=true;
 										zalamany=j;
 									}
-									break;
 								}
-								odstep++;
-								if(odstep==4)
-									odstep=0;
 								else if(!wielekolorow)
 									nowykat=(180+prostopadla-Math.toDegrees(Math.asin((double)zwierciadla.get(j).getn()*Math.sin(Math.toRadians(180.0+prostopadla-(double)rx.getkaty().get(i))))));
 								else
@@ -521,6 +520,7 @@ int currlambda;
 										nowykat = (prostopadla+90-Math.toDegrees(Math.asin(asinw)));
 									}
 									rx.getkaty().add((nowykat));
+									zalamanie=true;
 								}
 							}
 						}

@@ -17,7 +17,7 @@ import interfejs.WyborFali.Slider;
 
 public class Pryzmat extends JFrame
 {
-	static final int SLIDER_MIN = 10;
+	static final int SLIDER_MIN = 1;
 	static final int SLIDER_MAX = 30;
 	static final int SLIDER_INIT = 10;
 	JSlider slider;
