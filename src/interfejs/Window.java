@@ -9,6 +9,7 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.io.File;
 
 import javax.swing.AbstractButton;
@@ -320,6 +321,11 @@ public class Window extends JFrame
     					ciemny.setMode(0);
     					symulacja.setdark(false);
     					dark=0;
+    				}
+    				if(!symulacja.cakt())
+    				{
+    					symulacja.getray().getpunkty().clear();
+    					symulacja.getray().getpunkty().add(new Point2D.Double(0,310));
     				}
     			}
     		};

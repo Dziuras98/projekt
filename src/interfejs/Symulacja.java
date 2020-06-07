@@ -794,5 +794,13 @@ int currlambda;
 	{
 		dark=value;
 	}
+	public boolean cakt() 
+	{
+		return aktywny;
+	}
 
+	public Promien getray() 
+	{
+		return ray;
+	}
 }
